@@ -1,4 +1,5 @@
 const moviesDB = require("../../model/movie/moviesModel");
+const movieratingDB = require("../../model/movie/movierationgModel");
 const cloudinary = require("../../cloudinary/cloudinaryConfig");
 
 exports.createmovie = async (req, res) => {
@@ -117,6 +118,58 @@ exports.getSingleMovie = async(req,res)=>{
         const getSingleMovieData = await moviesDB.findOne({_id:id});
 
         res.status(200).json(getSingleMovieData)
+    } catch (error) {
+        res.status(400).json({ error: error })
+    }
+}
+
+
+// addmovierating
+exports.addmovierating = async(req,res)=>{
+    const {movieid} = req.params;
+    
+    const {username,rating,description} = req.body;
+
+    if(!movieid || !username || !rating || !description){
+        res.status(400).json({error:"ALl fields are required"})
+    }
+
+    try {
+        const movieratingAdd = new movieratingDB({
+            userid:req.userMainId,movieid,username,rating,description
+        });
+
+        await movieratingAdd.save();
+
+        res.status(200).json(movieratingAdd);
+    } catch (error) {
+        res.status(400).json({ error: error })
+    }
+}
+
+
+// getMovieRating
+exports.getMovieRating = async(req,res)=>{
+    const {movieid} = req.params;
+
+    try {
+        const getmovierating = await movieratingDB.find({movieid:movieid});
+
+        res.status(200).json(getmovierating)
+    } catch (error) {
+        console.log("error",error)
+        res.status(400).json({ error: error })
+    }
+}
+
+// deleterating
+exports.deleterating = async(req,res)=>{
+    const {ratingid} = req.params;
+
+    try {
+        const ratingDelete = await movieratingDB.findByIdAndDelete({_id:ratingid});
+
+        res.status(200).json({ratingDelete,message:"rating delete sucessfully !"})
     } catch (error) {
         res.status(400).json({ error: error })
     }

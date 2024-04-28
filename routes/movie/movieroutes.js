@@ -13,4 +13,10 @@ router.delete("/delete/:id",userauthenticate,moviescontrollers.deleteMovie);
 router.get("/details/:id",moviescontrollers.getSingleMovie);
 
 
+// movie rating
+router.post("/movieratingadd/:movieid",userauthenticate,moviescontrollers.addmovierating);
+router.get("/getmovierating/:movieid",moviescontrollers.getMovieRating);
+router.delete("/deletemovierating/:ratingid",userauthenticate,moviescontrollers.deleterating);
+
+
 module.exports = router;
